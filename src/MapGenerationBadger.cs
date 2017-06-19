@@ -96,6 +96,25 @@ namespace Arcen.AIW2.External
         return null;
 
       }
+	  
+	  internal static List<ArcenPoint> addPointsInGrid(ArcenPoint topLeft, ArcenPoint bottomRight, int width, int height, List<ArcenPoint> pointsSoFar, bool zigzag) {
+		List<ArcenPoint> points = new List<ArcenPoint>();
+		int wspacing = (bottomRight.X - topLeft.X) / (width - 1);
+		int hspacing = (bottomRight.Y - topLeft.Y) / (height - 1);
+
+		int val = 1;
+		for(int h = 0; h < height; h++) {
+			for(int w = val>0?0:width-1; w < width && w >= 0; w += val) {
+				ArcenPoint newPoint = ArcenPoint.Create(w * wspacing, h * hspacing);
+				newPoint += topLeft;
+				pointsSoFar.Add(newPoint);
+				points.Add(newPoint);
+			}
+			if(zigzag)
+				val = 0-val;
+		}
+		return points;
+	}
     
     //this version of AddPointsInCircle can provide some other points that must be avoided
     internal static List<ArcenPoint> addPointsInCircleWithExclusion(int numPoints, ArcenSimContext Context, ArcenPoint circleCenter, int circleRadius,
